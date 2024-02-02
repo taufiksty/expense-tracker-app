@@ -56,11 +56,12 @@ const styles = StyleSheet.create({
 	description: {
 		fontSize: 16,
 		marginBottom: 4,
+		maxWidth: '80%',
 		fontWeight: 'bold',
 	},
 	amountContainer: {
 		paddingVertical: 4,
-		justifyContent: 'center',
+		justifyContent: 'flex-start',
 		alignItems: 'center',
 	},
 	amount: {

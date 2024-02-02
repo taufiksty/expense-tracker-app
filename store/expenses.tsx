@@ -8,6 +8,7 @@ import {
 
 import Expense from '../models/expense';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchExpenses, storeExpense } from '../utils/http';
 
 interface Props {
 	readonly children: ReactNode;
@@ -35,8 +36,16 @@ interface ActionReducer {
 
 const _retrieveData = async () => {
 	try {
-		const jsonValue = await AsyncStorage.getItem('@expensetracker:expenses');
-		return jsonValue != null ? JSON.parse(jsonValue) : [];
+		/**
+		 * Retrieve data using AsyncStorage on local
+		 */
+		// const jsonValue = await AsyncStorage.getItem('@expensetracker:expenses');
+		// return jsonValue != null ? JSON.parse(jsonValue) : [];
+
+		/**
+		 * Retrieve data using Firebase on backend
+		 */
+		return await fetchExpenses();
 	} catch (error) {
 		console.log(error);
 	}
@@ -61,6 +70,7 @@ function expensesReducer(state: Expense[], action: ActionReducer) {
 			break;
 		case 'ADD':
 			updatedState = [...state, action.payload];
+			storeExpense(action.payload);
 			break;
 		case 'UPDATE':
 			updatedState = state.map((expense) => {
@@ -79,7 +89,7 @@ function expensesReducer(state: Expense[], action: ActionReducer) {
 			updatedState = state;
 	}
 
-	_saveData(updatedState);
+	// _saveData(updatedState);
 	return updatedState;
 }
 
@@ -88,10 +98,10 @@ function ExpensesContextProvider({ children }: Props) {
 
 	useLayoutEffect(() => {
 		const fetchDataFromStorage = async () => {
+			await AsyncStorage.clear();
 			try {
 				const retrievedData = await _retrieveData();
-				console.log(retrievedData.length);
-				if (retrievedData.length > 0) {
+				if (retrievedData && retrievedData.length > 0) {
 					dispatch({
 						type: 'INIT',
 						payload: { id: '', amount: 0, date: new Date() }, // not used
