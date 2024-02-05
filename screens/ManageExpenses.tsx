@@ -1,10 +1,12 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { useContext, useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from '../components/UI/Icon';
 import { ExpensesContext } from '../store/expenses';
 import Expense from '../models/expense';
 import ManageForm from '../components/expenses/ManageForm';
+import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 type Params = {
 	expenseId?: string;
@@ -14,6 +16,8 @@ function ManageExpenses() {
 	const route = useRoute<RouteProp<{ params: Params }>>();
 	const navigation = useNavigation();
 	const expenseCtx = useContext(ExpensesContext);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [error, setError] = useState<string>('');
 
 	const expenseId = route.params?.expenseId;
 
@@ -23,26 +27,47 @@ function ManageExpenses() {
 		});
 	}, [navigation, expenseId]);
 
-	function deleteExpenseHandler() {
-		const expenseData = expenseCtx.expenses.find(
-			(expense) => expense.id === (expenseId as string),
-		) as Expense;
-		expenseCtx.deleteExpense(expenseData);
-		navigation.goBack();
+	async function deleteExpenseHandler() {
+		try {
+			setIsLoading(true);
+			await deleteExpense(expenseId as string).then(() => {
+				const expenseData = expenseCtx.expenses.find(
+					(expense) => expense.id === (expenseId as string),
+				) as Expense;
+				expenseCtx.deleteExpense(expenseData);
+			});
+			navigation.goBack();
+		} catch (error) {
+			setError('Could not delete expense - please try again later!');
+			setIsLoading(false);
+		}
 	}
 
 	function cancelHandler() {
 		navigation.goBack();
 	}
 
-	function addOrUpdateExpenseHandler(expense: Expense) {
-		if (expenseId) {
-			expenseCtx.updateExpense(expense);
-		} else {
-			expenseCtx.addExpense(expense);
+	async function addOrUpdateExpenseHandler(expense: Expense) {
+		try {
+			setIsLoading(true);
+			if (expenseId) {
+				await updateExpense(expenseId, expense).then(() =>
+					expenseCtx.updateExpense(expense),
+				);
+			} else {
+				await storeExpense(expense).then(async (id) => {
+					await updateExpense(id, { ...expense, id });
+					expenseCtx.addExpense({ ...expense, id });
+				});
+			}
+			navigation.goBack();
+		} catch (error) {
+			setError('Could not save data - please try again later!');
+			setIsLoading(false);
 		}
-		navigation.goBack();
 	}
+
+	if (isLoading) return <LoadingOverlay />;
 
 	return (
 		<View style={styles.container}>

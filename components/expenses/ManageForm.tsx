@@ -24,9 +24,7 @@ function ManageForm({ expenseId, onCancel, onSubmit }: Props) {
 	useLayoutEffect(() => {
 		if (!expenseId) {
 			setExpense({
-				id: `e-${Math.floor(Math.random() * 100000000)
-					.toString()
-					.substring(0, 10)}`,
+				id: '',
 				amount: 0,
 				date: new Date(),
 			});

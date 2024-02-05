@@ -51,6 +51,9 @@ const _retrieveData = async () => {
 	}
 };
 
+/**
+ * Save data to local with AsyncStorage
+ * 
 const _saveData = async (data: object[]) => {
 	try {
 		const jsonValue = JSON.stringify(data);
@@ -60,6 +63,7 @@ const _saveData = async (data: object[]) => {
 		console.log(error);
 	}
 };
+ */
 
 function expensesReducer(state: Expense[], action: ActionReducer) {
 	let updatedState: Expense[];
@@ -70,7 +74,6 @@ function expensesReducer(state: Expense[], action: ActionReducer) {
 			break;
 		case 'ADD':
 			updatedState = [...state, action.payload];
-			storeExpense(action.payload);
 			break;
 		case 'UPDATE':
 			updatedState = state.map((expense) => {

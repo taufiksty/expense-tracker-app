@@ -1,11 +1,10 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ExpensesView from '../components/expenses';
 import { ExpensesContext } from '../store/expenses';
 import { getDateWeekBefore } from '../utils/date';
 
 function RecentExpenses() {
 	const expensesCtx = useContext(ExpensesContext);
-
 	const expenseLast7Days = expensesCtx.expenses
 		.filter(
 			(expense) =>

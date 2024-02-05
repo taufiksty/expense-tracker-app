@@ -2,8 +2,9 @@ import axios from 'axios';
 import Expense from '../models/expense';
 import { FIREBASE_URL } from '@env';
 
-export function storeExpense(expense: Expense) {
-	axios.post(`${FIREBASE_URL}expenses.json`, expense);
+export async function storeExpense(expense: Expense) {
+	const response = await axios.post(`${FIREBASE_URL}expenses.json`, expense);
+	return response.data.name;
 }
 
 export async function fetchExpenses() {
@@ -19,4 +20,12 @@ export async function fetchExpenses() {
 	} else {
 		return [];
 	}
+}
+
+export async function updateExpense(id: string, expense: Expense) {
+	return await axios.put(`${FIREBASE_URL}expenses/${id}.json`, expense);
+}
+
+export async function deleteExpense(id: string) {
+	return await axios.delete(`${FIREBASE_URL}expenses/${id}.json`);
 }
