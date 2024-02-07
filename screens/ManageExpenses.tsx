@@ -5,8 +5,13 @@ import Icon from '../components/UI/Icon';
 import { ExpensesContext } from '../store/expenses';
 import Expense from '../models/expense';
 import ManageForm from '../components/expenses/ManageForm';
-import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
+import {
+	deleteExpense,
+	storeExpense,
+	updateExpense,
+} from '../services/expenses';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 type Params = {
 	expenseId?: string;
@@ -68,6 +73,16 @@ function ManageExpenses() {
 	}
 
 	if (isLoading) return <LoadingOverlay />;
+
+	if (!isLoading && error)
+		return (
+			<ErrorOverlay
+				message={error}
+				onClose={() => {
+					setError('');
+				}}
+			/>
+		);
 
 	return (
 		<View style={styles.container}>
