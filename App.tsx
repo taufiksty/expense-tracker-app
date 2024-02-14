@@ -9,6 +9,8 @@ import ManageExpenses from './screens/ManageExpenses';
 import Icon from './components/UI/Icon';
 import { RouteStackParams } from './types/RouteStackParams';
 import ExpensesContextProvider from './store/expenses';
+import Login from './screens/Login';
+import Signup from './screens/Signup';
 
 const Stack = createNativeStackNavigator<RouteStackParams>();
 const BottomTab = createBottomTabNavigator();
@@ -35,7 +37,7 @@ function OverviewExpenses() {
 					}),
 			})}>
 			<BottomTab.Screen
-				name="RecentExpenses"
+				name='RecentExpenses'
 				component={RecentExpenses}
 				options={{
 					title: 'Recent Expenses',
@@ -45,12 +47,13 @@ function OverviewExpenses() {
 							name: 'clock',
 							color,
 							size,
-							onPress: () => navigation.navigate('RecentExpenses' as never),
+							onPress: () =>
+								navigation.navigate('RecentExpenses' as never),
 						}),
 				}}
 			/>
 			<BottomTab.Screen
-				name="AllExpenses"
+				name='AllExpenses'
 				component={AllExpenses}
 				options={{
 					title: 'All Expenses',
@@ -60,7 +63,8 @@ function OverviewExpenses() {
 							name: 'calendar',
 							color,
 							size,
-							onPress: () => navigation.navigate('AllExpenses' as never),
+							onPress: () =>
+								navigation.navigate('AllExpenses' as never),
 						}),
 				}}
 			/>
@@ -71,17 +75,27 @@ function OverviewExpenses() {
 export default function App() {
 	return (
 		<>
-			<StatusBar style="auto" />
+			<StatusBar style='auto' />
 			<ExpensesContextProvider>
 				<NavigationContainer>
-					<Stack.Navigator>
+					<Stack.Navigator initialRouteName='Login'>
 						<Stack.Screen
-							name="OverviewExpenses"
+							name='Login'
+							component={Login}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name='Signup'
+							component={Signup}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name='OverviewExpenses'
 							component={OverviewExpenses}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
-							name="ManageExpenses"
+							name='ManageExpenses'
 							component={ManageExpenses}
 							options={{
 								presentation: 'modal',

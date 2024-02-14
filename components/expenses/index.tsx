@@ -17,7 +17,9 @@ function ExpensesView({ expenses, period }: Props) {
 			/>
 			<View style={styles.containerList}>
 				{expenses.length === 0 ? (
-					<Text style={styles.noExpenseText}>No expense registered.</Text>
+					<Text style={styles.noExpenseText}>
+						No expense registered.
+					</Text>
 				) : (
 					<ExpensesList expenses={expenses} />
 				)}
