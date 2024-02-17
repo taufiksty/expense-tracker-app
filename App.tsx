@@ -12,8 +12,12 @@ import ExpensesContextProvider from './store/expenses';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
 import AuthContextProvider, { AuthContext } from './store/auth';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SplashScreen from 'expo-splash-screen';
+import { View } from 'react-native';
+
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RouteStackParams>();
 const BottomTab = createBottomTabNavigator();
@@ -116,27 +120,55 @@ function AuthenticatedStack() {
 }
 
 function Root() {
-	const [isLoading, setIsLoading] = useState(false);
+	const [isReady, setIsReady] = useState(false);
 
 	const authCtx = useContext(AuthContext);
 
 	useEffect(() => {
 		async function fetchUserData() {
-			const userData = await AsyncStorage.getItem(
-				'@expense-tracker-app:userData',
-			);
+			try {
+				const userData = await AsyncStorage.getItem(
+					'@expense-tracker-app:userData',
+				);
 
-			if (userData) {
-				authCtx.addToken(JSON.parse(userData));
+				if (userData) {
+					authCtx.addToken(JSON.parse(userData));
+				}
+
+				await new Promise((resolve) => setTimeout(resolve, 2000));
+			} catch (error) {
+				console.warn(error);
+			} finally {
+				setIsReady(true);
 			}
-
-			setIsLoading(false);
 		}
 
 		fetchUserData();
 	}, []);
 
-	return authCtx.isAuthenticated ? <AuthenticatedStack /> : <AuthStack />;
+	const onLayoutRootView = useCallback(async () => {
+		if (isReady) {
+			await SplashScreen.hideAsync();
+		}
+	}, [isReady]);
+
+	if (!isReady) {
+		return null;
+	}
+
+	return (
+		<View
+			style={{ flex: 1 }}
+			onLayout={onLayoutRootView}>
+			<NavigationContainer>
+				{authCtx.isAuthenticated ? (
+					<AuthenticatedStack />
+				) : (
+					<AuthStack />
+				)}
+			</NavigationContainer>
+		</View>
+	);
 }
 
 export default function App() {
@@ -144,9 +176,7 @@ export default function App() {
 		<>
 			<StatusBar style='auto' />
 			<AuthContextProvider>
-				<NavigationContainer>
-					<Root />
-				</NavigationContainer>
+				<Root />
 			</AuthContextProvider>
 		</>
 	);
