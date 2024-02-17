@@ -6,7 +6,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 
 interface Props {
 	isLogin?: boolean;
-	onAuth?: ({ email, password }: AuthCredential) => void;
+	onAuth: ({ email, password }: AuthCredential) => void;
 }
 
 function Auth({ isLogin = false, onAuth }: Props) {
@@ -17,7 +17,9 @@ function Auth({ isLogin = false, onAuth }: Props) {
 
 		const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 		const passwordIsValid = password.length >= 6;
-		const confirmPasswordIsValid = password === confirmPassword;
+		const confirmPasswordIsValid = !isLogin
+			? password === confirmPassword
+			: true;
 
 		if (!emailIsValid || !passwordIsValid || !confirmPasswordIsValid) {
 			Alert.alert('Invalid input', 'Please check your input');

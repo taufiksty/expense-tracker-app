@@ -8,6 +8,7 @@ import { useContext, useLayoutEffect, useState } from 'react';
 import { getFormattedDate } from '../../utils/date';
 import Expense from '../../models/expense';
 import { ExpensesContext } from '../../store/expenses';
+import { AuthContext } from '../../store/auth';
 
 interface Props {
 	readonly expenseId?: string;
@@ -19,6 +20,7 @@ function ManageForm({ expenseId, onCancel, onSubmit }: Props) {
 	const [expense, setExpense] = useState<Expense | null>();
 	const [showDatePicker, setShowDatePicker] = useState(false);
 
+	const authCtx = useContext(AuthContext);
 	const expenseCtx = useContext(ExpensesContext);
 
 	useLayoutEffect(() => {
@@ -26,6 +28,7 @@ function ManageForm({ expenseId, onCancel, onSubmit }: Props) {
 			setExpense({
 				id: '',
 				amount: 0,
+				owner: authCtx.userId as string,
 				date: new Date(),
 			});
 		} else {
@@ -64,7 +67,10 @@ function ManageForm({ expenseId, onCancel, onSubmit }: Props) {
 			expense?.amount && !isNaN(expense.amount) && expense.amount > 0;
 
 		if (!amountValidation) {
-			return Alert.alert('Invalid', 'Amount must filled and greater than zero');
+			return Alert.alert(
+				'Invalid',
+				'Amount must filled and greater than zero',
+			);
 		}
 
 		onSubmit(expense);
@@ -73,52 +79,56 @@ function ManageForm({ expenseId, onCancel, onSubmit }: Props) {
 	return (
 		<View>
 			<Input
-				label="Amount"
+				label='Amount'
 				inputConfig={{
 					keyboardType: 'decimal-pad',
 					placeholder: 'Rp50.000',
 					value: expense?.amount
 						? `Rp${expense?.amount.toLocaleString('ID-id')}`
 						: '',
-					onChangeText: (value) => inputChangeHandler('amount', value),
+					onChangeText: (value) =>
+						inputChangeHandler('amount', value),
 				}}
 			/>
 			{!showDatePicker ? (
 				<Pressable onPress={() => setShowDatePicker(true)}>
 					<Input
-						label="Date"
+						label='Date'
 						inputConfig={{
 							editable: false,
 							value: getFormattedDate(
-								expense?.date ? new Date(expense.date) : new Date(),
+								expense?.date
+									? new Date(expense.date)
+									: new Date(),
 							),
 						}}
 					/>
 				</Pressable>
 			) : (
 				<DateTimePicker
-					mode="date"
-					display="calendar"
+					mode='date'
+					display='calendar'
 					value={expense?.date ? new Date(expense.date) : new Date()}
 					onChange={onChangeDate}
 				/>
 			)}
 
 			<Input
-				label="Description"
+				label='Description'
 				inputConfig={{
 					multiline: true,
 					autoCorrect: false,
 					autoCapitalize: 'sentences',
 					value: expense?.description,
-					onChangeText: (value) => inputChangeHandler('description', value),
+					onChangeText: (value) =>
+						inputChangeHandler('description', value),
 				}}
 			/>
 
 			<View style={styles.buttonContainer}>
 				<Button
 					onPress={onCancel}
-					variant="flat"
+					variant='flat'
 					style={styles.button}>
 					Cancel
 				</Button>

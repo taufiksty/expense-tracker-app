@@ -2,6 +2,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import ExpensesSummary from './Summary';
 import ExpensesList from './List';
 import Expense from '../../models/expense';
+import Icon from '../UI/Icon';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
 	readonly expenses: Expense[];
@@ -9,6 +11,8 @@ interface Props {
 }
 
 function ExpensesView({ expenses, period }: Props) {
+	const navigation = useNavigation();
+
 	return (
 		<View style={styles.container}>
 			<ExpensesSummary
@@ -24,6 +28,23 @@ function ExpensesView({ expenses, period }: Props) {
 					<ExpensesList expenses={expenses} />
 				)}
 			</View>
+
+			{/* Floating Button */}
+			<Icon
+				name='plus'
+				size={24}
+				color='white'
+				onPress={() => navigation.navigate('ManageExpenses' as never)}
+				style={{
+					position: 'absolute',
+					bottom: 20,
+					right: 20,
+					borderRadius: 30,
+					padding: 16,
+					backgroundColor: 'blue',
+					elevation: 6,
+				}}
+			/>
 		</View>
 	);
 }

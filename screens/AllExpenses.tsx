@@ -4,30 +4,37 @@ import { ExpensesContext } from '../store/expenses';
 import { fetchExpenses } from '../services/expenses';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import ErrorOverlay from '../components/UI/ErrorOverlay';
+import { AuthContext } from '../store/auth';
 
 function AllExpenses() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isError, setIsError] = useState<string>('');
 
+	const authCtx = useContext(AuthContext);
 	const expensesCtx = useContext(ExpensesContext);
 
 	useEffect(() => {
 		const _retrieveData = async () => {
 			try {
 				setIsLoading(true);
-				const retrievedData = await fetchExpenses();
+				const retrievedData = await fetchExpenses(
+					authCtx.token as string,
+					authCtx.userId as string,
+				);
 				if (retrievedData && retrievedData.length > 0) {
 					expensesCtx.initExpenses(retrievedData);
 				}
 				setIsLoading(false);
 			} catch (error) {
-				setIsError('Could not retrieve expenses - please try again later!');
+				setIsError(
+					'Could not retrieve expenses - please try again later!',
+				);
 				setIsLoading(false);
 			}
 		};
 
 		_retrieveData();
-	}, []);
+	}, [authCtx]);
 
 	if (isLoading) return <LoadingOverlay />;
 

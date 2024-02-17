@@ -1,12 +1,16 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, Text } from 'react-native';
+interface Props {
+	message?: string;
+}
 
-function LoadingOverlay() {
+function LoadingOverlay({ message }: Props) {
 	return (
 		<View style={styles.container}>
 			<ActivityIndicator
-				size="large"
-				color="black"
+				size='large'
+				color='black'
 			/>
+			{message && <Text>{message}</Text>}
 		</View>
 	);
 }

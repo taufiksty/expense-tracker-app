@@ -64,7 +64,7 @@ function ExpensesContextProvider({ children }: Props) {
 	function initExpenses(expenses: Expense[]) {
 		dispatch({
 			type: 'INIT',
-			payload: { id: '', amount: 0, date: new Date() },
+			payload: { id: '', amount: 0, owner: '', date: new Date() }, // just init
 			initPayload: expenses,
 		});
 	}

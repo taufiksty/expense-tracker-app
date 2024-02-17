@@ -21,14 +21,18 @@ function ExpenseItem({ id, amount, description, date }: Readonly<Expense>) {
 				onPress={itemPressHandler}
 				android_ripple={{ color: 'state', borderless: true }}
 				style={({ pressed }) =>
-					pressed ? [styles.pressed, styles.container] : styles.container
+					pressed
+						? [styles.pressed, styles.container]
+						: styles.container
 				}>
 				<View>
 					<Text style={styles.description}>{description}</Text>
 					<Text>{getFormattedDate(new Date(date))}</Text>
 				</View>
 				<View style={styles.amountContainer}>
-					<Text style={styles.amount}>Rp{amount.toLocaleString('id-ID')}</Text>
+					<Text style={styles.amount}>
+						Rp{amount.toLocaleString('id-ID')}
+					</Text>
 				</View>
 			</Pressable>
 		</View>
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
 	description: {
 		fontSize: 16,
 		marginBottom: 4,
-		maxWidth: '80%',
+		// maxWidth: '95%',
 		fontWeight: 'bold',
 	},
 	amountContainer: {

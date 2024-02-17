@@ -12,6 +12,7 @@ import {
 } from '../services/expenses';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import ErrorOverlay from '../components/UI/ErrorOverlay';
+import { AuthContext } from '../store/auth';
 
 type Params = {
 	expenseId?: string;
@@ -24,7 +25,10 @@ function ManageExpenses() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>('');
 
+	const authCtx = useContext(AuthContext);
 	const expenseId = route.params?.expenseId;
+
+	const token = authCtx.token;
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -35,12 +39,14 @@ function ManageExpenses() {
 	async function deleteExpenseHandler() {
 		try {
 			setIsLoading(true);
-			await deleteExpense(expenseId as string).then(() => {
-				const expenseData = expenseCtx.expenses.find(
-					(expense) => expense.id === (expenseId as string),
-				) as Expense;
-				expenseCtx.deleteExpense(expenseData);
-			});
+			await deleteExpense(expenseId as string, token as string).then(
+				() => {
+					const expenseData = expenseCtx.expenses.find(
+						(expense) => expense.id === (expenseId as string),
+					) as Expense;
+					expenseCtx.deleteExpense(expenseData);
+				},
+			);
 			navigation.goBack();
 		} catch (error) {
 			setError('Could not delete expense - please try again later!');
@@ -56,12 +62,17 @@ function ManageExpenses() {
 		try {
 			setIsLoading(true);
 			if (expenseId) {
-				await updateExpense(expenseId, expense).then(() =>
-					expenseCtx.updateExpense(expense),
+				await updateExpense(expenseId, expense, token as string).then(
+					() => expenseCtx.updateExpense(expense),
 				);
 			} else {
 				await storeExpense(expense).then(async (id) => {
-					await updateExpense(id, { ...expense, id });
+					console.log(id);
+					await updateExpense(
+						id,
+						{ ...expense, id },
+						token as string,
+					);
 					expenseCtx.addExpense({ ...expense, id });
 				});
 			}
@@ -69,6 +80,7 @@ function ManageExpenses() {
 		} catch (error) {
 			setError('Could not save data - please try again later!');
 			setIsLoading(false);
+			console.log(error);
 		}
 	}
 
@@ -94,9 +106,9 @@ function ManageExpenses() {
 			{expenseId && (
 				<View style={styles.iconDeleteContainer}>
 					<Icon
-						name="trash"
+						name='trash'
 						size={24}
-						color="#fa695f"
+						color='#fa695f'
 						onPress={deleteExpenseHandler}
 					/>
 				</View>
