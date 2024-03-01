@@ -1,0 +1,10 @@
+{
+	"build": {
+		"production": {
+			"env": {
+				"API_KEY": "AIzaSyDuvEA3V7I7lb6rWNyLS08RArJNAWS2Z8U",
+				"FIREBASE_URL": "https://expense-tracker-app-3128d-default-rtdb.asia-southeast1.firebasedatabase.app/"
+			}
+		}
+	}
+}
