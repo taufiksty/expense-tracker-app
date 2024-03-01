@@ -21,10 +21,16 @@
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
-			}
+			},
+			"package": "com.taufiksatya.expensetracker"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "adb5de6e-e796-4a26-9a67-6df370b8154e"
+			}
 		}
 	}
 }
