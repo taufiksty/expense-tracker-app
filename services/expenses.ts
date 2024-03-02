@@ -2,8 +2,11 @@ import axios from 'axios';
 import Expense from '../models/expense';
 import { FIREBASE_URL } from '@env';
 
-export async function storeExpense(expense: Expense) {
-	const response = await axios.post(`${FIREBASE_URL}expenses.json`, expense);
+export async function storeExpense(token: string, expense: Expense) {
+	const response = await axios.post(
+		`${FIREBASE_URL}expenses.json?auth=${token}`,
+		expense,
+	);
 	return response.data.name;
 }
 

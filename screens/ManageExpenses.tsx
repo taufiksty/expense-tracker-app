@@ -66,15 +66,16 @@ function ManageExpenses() {
 					() => expenseCtx.updateExpense(expense),
 				);
 			} else {
-				await storeExpense(expense).then(async (id) => {
-					console.log(id);
-					await updateExpense(
-						id,
-						{ ...expense, id },
-						token as string,
-					);
-					expenseCtx.addExpense({ ...expense, id });
-				});
+				await storeExpense(token as string, expense).then(
+					async (id) => {
+						await updateExpense(
+							id,
+							{ ...expense, id },
+							token as string,
+						);
+						expenseCtx.addExpense({ ...expense, id });
+					},
+				);
 			}
 			navigation.goBack();
 		} catch (error) {
