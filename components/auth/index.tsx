@@ -6,14 +6,14 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 
 interface Props {
 	isLogin?: boolean;
-	onAuth: ({ email, password }: AuthCredential) => void;
+	onAuth: ({ name, email, password }: AuthCredential) => void;
 }
 
 function Auth({ isLogin = false, onAuth }: Props) {
 	const navigation = useNavigation();
 
 	function onSubmitHandler(credentials: AuthCredential) {
-		let { email, password, confirmPassword } = credentials;
+		let { name, email, password, confirmPassword } = credentials;
 
 		const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 		const passwordIsValid = password.length >= 6;
@@ -26,7 +26,7 @@ function Auth({ isLogin = false, onAuth }: Props) {
 			return;
 		}
 
-		onAuth && onAuth({ email, password });
+		onAuth && onAuth({ name, email, password });
 	}
 
 	function switchAuthModeHandler() {

@@ -31,7 +31,7 @@ function ExpenseItem({ id, amount, description, date }: Readonly<Expense>) {
 				</View>
 				<View style={styles.amountContainer}>
 					<Text style={styles.amount}>
-						Rp{amount.toLocaleString('id-ID')}
+						Rp{amount?.toLocaleString('id-ID')}
 					</Text>
 				</View>
 			</Pressable>

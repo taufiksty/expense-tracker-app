@@ -15,7 +15,7 @@ function Login() {
 		setIsLoading(true);
 		try {
 			const res = await logIn(credentials);
-			authCtx.addToken(res);
+			authCtx.addToken({ token: res.token, userId: res.user.id });
 		} catch (error) {
 			Alert.alert(
 				'Login failed',

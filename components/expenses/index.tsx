@@ -20,7 +20,7 @@ function ExpensesView({ expenses, period }: Props) {
 				period={period}
 			/>
 			<View style={styles.containerList}>
-				{expenses.length === 0 ? (
+				{expenses.length === 0 || !expenses[0].id ? (
 					<Text style={styles.noExpenseText}>
 						No expense registered.
 					</Text>

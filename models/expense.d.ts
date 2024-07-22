@@ -4,6 +4,8 @@ type Expense = {
 	amount: number;
 	owner: string;
 	date: Date;
+	createdAt?: Date;
+	updatedAt?: Date;
 };
 
 export default Expense;

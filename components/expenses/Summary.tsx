@@ -18,7 +18,10 @@ function ExpensesSummary({ expenses, period }: Props) {
 				{period ? `Last ${period} days` : 'All Time'}
 			</Text>
 			<Text style={styles.summary}>
-				Rp{sumExpenses.toLocaleString('id-ID')}
+				Rp
+				{sumExpenses?.toLocaleString('id-ID') == 'NaN'
+					? 0
+					: sumExpenses?.toLocaleString('id-ID')}
 			</Text>
 		</View>
 	);

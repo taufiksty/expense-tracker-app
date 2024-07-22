@@ -66,22 +66,14 @@ function ManageExpenses() {
 					() => expenseCtx.updateExpense(expense),
 				);
 			} else {
-				await storeExpense(token as string, expense).then(
-					async (id) => {
-						await updateExpense(
-							id,
-							{ ...expense, id },
-							token as string,
-						);
-						expenseCtx.addExpense({ ...expense, id });
-					},
-				);
+				await storeExpense(token as string, expense).then((res) => {
+					expenseCtx.addExpense(res);
+				});
 			}
 			navigation.goBack();
 		} catch (error) {
 			setError('Could not save data - please try again later!');
 			setIsLoading(false);
-			console.log(error);
 		}
 	}
 

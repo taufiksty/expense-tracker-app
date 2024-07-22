@@ -16,6 +16,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
+import { logOut } from './services/auth';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,7 +43,10 @@ function OverviewExpenses() {
 							marginHorizontal: 8,
 							marginVertical: 2,
 						},
-						onPress: () => authCtx.logout(),
+						onPress: async () => {
+							await logOut({ token: authCtx.token as string });
+							authCtx.logout();
+						},
 					}),
 			})}>
 			<BottomTab.Screen

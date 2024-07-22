@@ -20,7 +20,6 @@ function RecentExpenses() {
 				setIsLoading(true);
 				const retrievedData = await fetchExpenses(
 					authCtx.token as string,
-					authCtx.userId as string,
 				);
 				if (retrievedData && retrievedData.length > 0) {
 					expensesCtx.initExpenses(retrievedData);

@@ -1,4 +1,3 @@
 declare module '@env' {
-	export const API_KEY: string;
-	export const FIREBASE_URL: string;
+	export const API_LOCAL_V1: string;
 }

@@ -6,11 +6,17 @@ import Button from '../UI/Button';
 
 interface Props {
 	isLogin: boolean;
-	onSubmit: ({ email, password, confirmPassword }: AuthCredential) => void;
+	onSubmit: ({
+		name,
+		email,
+		password,
+		confirmPassword,
+	}: AuthCredential) => void;
 }
 
 function Form({ isLogin, onSubmit }: Props) {
 	const [credential, setCredential] = useState<AuthCredential>({
+		name: '',
 		email: '',
 		password: '',
 	});
@@ -22,6 +28,16 @@ function Form({ isLogin, onSubmit }: Props) {
 	return (
 		<View>
 			<View>
+				{!isLogin && (
+					<Input
+						label='Name'
+						inputConfig={{
+							value: credential.name,
+							onChangeText: (value) =>
+								setCredential({ ...credential, name: value }),
+						}}
+					/>
+				)}
 				<Input
 					label='Email address'
 					inputConfig={{
